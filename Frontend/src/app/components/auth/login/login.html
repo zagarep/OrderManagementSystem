@@ -1,0 +1,45 @@
+
+<div class="auth-container">
+  <div class="auth-card">
+    <h1>Welcome Back!</h1>
+    <p class="subtitle">Sign in to your Order Management account</p>
+
+    <form #loginForm="ngForm" (ngSubmit)="onLogin()">
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input id="email"
+               name="email"
+               type="email"
+               [(ngModel)]="email"
+               required
+               email
+               placeholder="Enter your email" />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input id="password"
+               name="password"
+               type="password"
+               [(ngModel)]="password"
+               required
+               placeholder="Enter your password" />
+      </div>
+      <button type="submit" [disabled]="isLoading">
+        {{ isLoading ? 'Logging in...' : 'Login' }}
+      </button>
+
+      <!--<p>Loading state: {{ isLoading }}</p>
+      <p>Message: {{ message }}</p>-->
+
+      <p *ngIf="message" [class.error-message]="isError">
+        {{ message }}
+      </p>
+    </form>
+
+    <p class="footer-text">
+      Don't have an account?
+      <a routerLink="/register">Register here</a>
+    </p>
+  </div>
+</div>

@@ -1,0 +1,17 @@
+
+# Dependencies
+node_modules/
+
+# Angular build output
+dist/
+.angular/
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+
+# Environment and secrets
+.env
+.env.*
+!.env.example

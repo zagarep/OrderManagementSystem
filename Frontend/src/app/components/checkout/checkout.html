@@ -1,0 +1,78 @@
+<div class="checkout-page">
+  <header class="checkout-header">
+    <a routerLink="/products" class="brand">
+      🛒 Order Management
+    </a>
+
+    <button type="button" (click)="backToCart()">
+      ← Back to Cart
+    </button>
+  </header>
+
+  <main class="checkout-content">
+    <h1>Checkout</h1>
+    <p class="subtitle">Enter your delivery details to continue.</p>
+
+    <div *ngIf="items.length === 0" class="empty-state">
+      <h2>Your cart is empty</h2>
+      <p>Add products before proceeding to checkout.</p>
+      <a routerLink="/products">Continue Shopping</a>
+    </div>
+
+    <div *ngIf="items.length > 0" class="checkout-layout">
+      <section class="address-card">
+        <h2>Delivery Address</h2>
+
+        <label for="deliveryAddress">Full delivery address</label>
+        <textarea id="deliveryAddress"
+                  name="deliveryAddress"
+                  [(ngModel)]="deliveryAddress"
+                  rows="5"
+                  placeholder="House/flat number, street, area, city, state, PIN code"
+                  required>
+        </textarea>
+
+        <p class="hint">
+          Please include your city and PIN code.
+        </p>
+
+        <button type="button"
+                class="place-order-btn"
+                [disabled]="isLoading || items.length === 0"
+                (click)="placeOrder()">
+          {{ isLoading ? 'Placing Order...' : 'Place Order' }}
+        </button>
+
+        <p *ngIf="errorMessage" class="error-message">
+          {{ errorMessage }}
+        </p>
+
+        <p *ngIf="successMessage" class="success-message">
+          {{ successMessage }}
+        </p>
+      </section>
+
+      <aside class="summary-card">
+        <h2>Order Summary</h2>
+
+        <div class="summary-item" *ngFor="let item of items">
+          <div>
+            <strong>{{ item.product.name }}</strong>
+            <p>Quantity: {{ item.quantity }}</p>
+          </div>
+
+          <span>
+            {{ item.product.price * item.quantity | currency:'INR':'symbol':'1.2-2' }}
+          </span>
+        </div>
+
+        <div class="summary-total">
+          <span>Total ({{ totalItems }} items)</span>
+          <strong>
+            {{ totalPrice | currency:'INR':'symbol':'1.2-2' }}
+          </strong>
+        </div>
+      </aside>
+    </div>
+  </main>
+</div>

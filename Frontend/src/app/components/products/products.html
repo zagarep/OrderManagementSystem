@@ -1,0 +1,155 @@
+
+<div class="page">
+  <header class="topbar">
+    <a class="brand" routerLink="/products">
+      <span class="brand-icon">🛒</span>
+      <span>Order Management</span>
+    </a>
+
+    <div class="header-actions">
+      <a routerLink="/cart" class="cart-link">
+        🛒 My Cart ({{ cartItemCount }})
+      </a>
+
+      <span class="user-label">Customer Dashboard</span>
+
+      <button class="logout-btn" type="button" (click)="logout()">
+        Logout
+      </button>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <section class="welcome-section">
+      <div>
+        <p class="eyebrow">YOUR STORE</p>
+        <h1>Discover Products</h1>
+        <p class="subtitle">
+          Browse our collection and find what you need.
+        </p>
+      </div>
+
+      <div class="product-count">
+        <span class="count-number">{{ products.length }}</span>
+        <span>Products loaded</span>
+      </div>
+    </section>
+
+    <section class="toolbar">
+      <div class="search-box">
+        <span>⌕</span>
+        <input type="text"
+               placeholder="Search products..."
+               aria-label="Search products"
+               #searchInput
+               (input)="searchTerm = searchInput.value" />
+      </div>
+
+      <span class="toolbar-note">Available products from your store</span>
+    </section>
+
+    <div *ngIf="isLoading" class="state-card">
+      <div class="spinner"></div>
+      <p>Loading your products...</p>
+    </div>
+
+    <div *ngIf="errorMessage && !isLoading" class="state-card error-card">
+      <h3>Couldn't load products</h3>
+      <p>{{ errorMessage }}</p>
+      <button class="primary-btn" (click)="loadProducts()">
+        Try again
+      </button>
+    </div>
+
+    <section *ngIf="!isLoading && !errorMessage" class="products-section">
+      <div class="section-heading">
+        <div>
+          <h2>Our Products</h2>
+          <p>Choose a product to get started.</p>
+        </div>
+      </div>
+
+      <div class="product-grid">
+        <article class="product-card"
+                 *ngFor="let product of products | slice:0:100">
+
+          <div class="product-visual">
+            <span class="stock-badge"
+                  [class.out-of-stock]="product.stockQuantity <= 0">
+              <span class="status-dot"></span>
+              {{ product.stockQuantity > 0 ? 'In stock' : 'Out of stock' }}
+            </span>
+
+            <img *ngIf="product.imageUrl && !product.imageUrl.includes('example.com')"
+                 [src]="product.imageUrl"
+                 [alt]="product.name" />
+
+            <div class="product-placeholder"
+                 *ngIf="!product.imageUrl || product.imageUrl.includes('example.com')">
+              <span>
+                {{
+                       product.name.toLowerCase().includes('mouse') ? '🖱️' :
+                        product.name.toLowerCase().includes('charger') ? '🔌' : '📦'
+                }}
+              </span>
+            </div>
+          </div>
+
+          <div class="product-details">
+            <div class="category-label">
+              <span class="category-dot"></span>
+              {{ product.category?.name || 'Category ' + product.categoryId }}
+            </div>
+
+            <h3>{{ product.name }}</h3>
+            <p class="description">{{ product.description }}</p>
+
+            <div class="price">
+              {{ product.price | currency:'INR':'symbol':'1.2-2' }}
+            </div>
+
+            <div class="product-meta">
+              <span>📦 {{ product.stockQuantity }} in stock</span>
+              <span [class.inactive]="!product.isActive">
+                {{ product.isActive ? '● Active' : '● Inactive' }}
+              </span>
+            </div>
+
+            <div class="cart-actions">
+              <select [ngModel]="quantities[product.id] || 1"
+                      (ngModelChange)="quantities[product.id] = $event"
+                      [disabled]="product.stockQuantity <= 0"
+                      aria-label="Select quantity">
+
+                <option *ngFor="let quantity of [].constructor(
+                        product.stockQuantity>
+                  10 ? 10 : product.stockQuantity
+                  ); let i = index"
+                  [ngValue]="i + 1">
+                  {{ i + 1 }}
+                </option>
+              </select>
+              <button type="button"
+                      class="add-cart-btn"
+                      [disabled]="!product.isActive || product.stockQuantity <= 0"
+                      (click)="addToCart(product)">
+                🛒 Add to Cart
+              </button>
+            </div>
+
+          </div>
+        </article>
+      </div>
+      <div *ngIf="products.length === 0" class="empty-state">
+        <span>📦</span>
+        <h3>No products found</h3>
+        <p>There are no products to display right now.</p>
+      </div>
+    </section>
+
+    <footer class="page-footer">
+      <span>Order Management System</span>
+      <span>Powered by Angular & .NET</span>
+    </footer>
+  </main>
+</div>

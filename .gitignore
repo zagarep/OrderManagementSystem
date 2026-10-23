@@ -1,0 +1,17 @@
+# .NET build files
+**/bin/
+**/obj/
+.vs/
+*.user
+*.suo
+
+# Angular generated files
+**/node_modules/
+**/dist/
+**/.angular/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+appsettings.Development.json

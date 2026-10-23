@@ -1,0 +1,74 @@
+
+<div class="cart-page">
+  <header class="cart-header">
+    <a routerLink="/products" class="brand">🛒 Order Management</a>
+    <button class="logout-btn" (click)="logout()">Logout</button>
+  </header>
+
+  <main class="cart-content">
+    <button class="back-btn" (click)="continueShopping()">
+      ← Continue Shopping
+    </button>
+
+    <h1>My Cart</h1>
+    <p class="subtitle">Review your selected products before checkout.</p>
+
+    <div *ngIf="items.length === 0" class="empty-cart">
+      <div class="empty-icon">🛍️</div>
+      <h2>Your cart is empty</h2>
+      <p>Add products from our catalog to get started.</p>
+      <button class="primary-btn" (click)="continueShopping()">
+        Browse Products
+      </button>
+    </div>
+
+    <div *ngIf="items.length > 0" class="cart-layout">
+      <section class="cart-items">
+        <article class="cart-item" *ngFor="let item of items">
+          <div class="item-icon">📦</div>
+
+          <div class="item-info">
+            <h3>{{ item.product.name }}</h3>
+            <p>{{ item.product.description }}</p>
+            <strong>{{ item.product.price | currency:'INR':'symbol':'1.2-2' }}</strong>
+          </div>
+
+          <div class="item-controls">
+            <label>Quantity</label>
+            <select [ngModel]="item.quantity"
+                    (ngModelChange)="updateQuantity(item, $event)">
+              <option *ngFor="let qty of [].constructor(item.product.stockQuantity > 10 ? 10 : item.product.stockQuantity); let i = index"
+                      [ngValue]="i + 1">
+                {{ i + 1 }}
+              </option>
+            </select>
+
+            <button class="remove-btn" (click)="removeItem(item.product.id)">
+              Remove
+            </button>
+          </div>
+
+          <div class="item-total">
+            {{ item.product.price * item.quantity | currency:'INR':'symbol':'1.2-2' }}
+          </div>
+        </article>
+      </section>
+
+      <aside class="order-summary">
+        <h2>Order Summary</h2>
+        <div class="summary-row">
+          <span>Total items</span>
+          <span>{{ totalItems }}</span>
+        </div>
+        <div class="summary-row total-row">
+          <span>Total amount</span>
+          <strong>{{ totalPrice | currency:'INR':'symbol':'1.2-2' }}</strong>
+        </div>
+        <button class="primary-btn checkout-btn" disabled>
+          Checkout — Coming Next
+        </button>
+        <p class="summary-note">Your order will be confirmed during checkout.</p>
+      </aside>
+    </div>
+  </main>
+</div>
